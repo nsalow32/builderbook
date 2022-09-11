@@ -20,7 +20,7 @@ class MyApp extends App {
   render() {
     const { Component, pageProps } = this.props;
 
-    // console.log(pageProps);
+    console.log(pageProps);
 
     return (
       <CacheProvider
@@ -36,7 +36,7 @@ class MyApp extends App {
           </Head>
           <CssBaseline />
           <Header {...pageProps} />
-          <Component {...pageProps} />
+          <Component />
         </ThemeProvider>
       </CacheProvider>
     );
