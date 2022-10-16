@@ -36,6 +36,7 @@ function setupGithub({ server, ROOT_URL }) {
       res.redirect(`${ROOT_URL}/login`);
       return;
     }
+
     const { url, state } = oauthAuthorizationUrl({
       clientId: CLIENT_ID,
       redirectUrl: `${ROOT_URL}/auth/github/callback`,
@@ -109,4 +110,50 @@ function setupGithub({ server, ROOT_URL }) {
   });
 }
 
+function getAPI({ user, previews = [], request }) {
+  const github = new Octokit({
+    auth: user.githubAccessToken,
+    request: { timeout: 10000 },
+    previews,
+    log: {
+      info(msg, info) {
+        console.log(`Github API log: ${msg}`, {
+          ..._.omit(info, 'headers', 'request', 'body'),
+          user: _.pick(user, '_id', 'githubUsername', 'githubId'),
+          ..._.pick(request, 'ip', 'hostname'),
+        });
+      },
+    },
+  });
+
+  return github;
+}
+
+function getRepos({ user, request }) {
+  const github = getAPI({ user, request });
+
+  return github.repos.listForAuthenticatedUser({
+    visibility: 'private',
+    per_page: 100,
+    affiliation: 'owner',
+  });
+}
+
+function getRepoDetail({ user, repoName, request, path }) {
+  const github = getAPI({ user, request });
+  const [owner, repo] = repoName.split('/');
+
+  return github.repos.getContent({ owner, repo, path });
+}
+
+function getCommits({ user, repoName, request }) {
+  const github = getAPI({ user, request });
+  const [owner, repo] = repoName.split('/');
+
+  return github.repos.listCommits({ owner, repo });
+}
+
 exports.setupGithub = setupGithub;
+exports.getRepos = getRepos;
+exports.getRepoDetail = getRepoDetail;
+exports.getCommits = getCommits;
