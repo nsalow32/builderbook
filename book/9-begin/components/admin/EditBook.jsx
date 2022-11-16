@@ -36,7 +36,7 @@ class EditBook extends React.Component {
       const { repos } = await getGithubReposApiMethod();
       this.setState({ repos }); // eslint-disable-line
     } catch (err) {
-      console.log(err); // eslint-disable-line
+      logger.debug(err); // eslint-disable-line
     }
   }
 

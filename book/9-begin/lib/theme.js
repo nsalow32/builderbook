@@ -10,6 +10,12 @@ const theme = createTheme({
       primary: '#222',
     },
   },
+  typography: {
+    fontFamily: ['IBM Plex Mono', 'monospace'].join(','),
+    button: {
+      textTransform: 'none',
+    },
+  },
 });
 
 export { theme };

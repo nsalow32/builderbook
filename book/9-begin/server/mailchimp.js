@@ -32,7 +32,7 @@ async function addToMailchimp({ email, listName }) {
   const path = `/lists/${LIST_IDS[listName]}/members/`;
 
   // eslint-disable-next-line
-  console.log(path, data.email_address)
+  logger.info(path, data.email_address)
 
   await callAPI({ path, method: 'POST', data });
 }
