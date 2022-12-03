@@ -7,6 +7,8 @@ import throttle from 'lodash/throttle';
 
 import Link from 'next/link';
 
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+
 import Header from '../../components/Header';
 import BuyButton from '../../components/customer/BuyButton';
 
@@ -65,10 +67,12 @@ class ReadChapter extends React.Component {
       htmlContent,
       hideHeader: false,
       isMobile: false,
+      activeSection: null,
     };
   }
 
   static async getInitialProps(ctx) {
+    // console.log('ReadChapter.getInitialProps');
     const { bookSlug, chapterSlug, buy, checkout_canceled, error } = ctx.query;
     const { req } = ctx;
 
@@ -85,6 +89,7 @@ class ReadChapter extends React.Component {
   }
 
   componentDidMount() {
+    // console.log('ReadChapter.componentDidMount');
     document.getElementById('main-content').addEventListener('scroll', this.onScroll);
 
     const isMobile = window.innerWidth < 768;
@@ -103,9 +108,12 @@ class ReadChapter extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
+    // console.log('before condition ReadChapter.componentDidUpdate');
     if (prevProps.chapter && prevProps.chapter._id !== this.props.chapter._id) {
+      // console.log('inside condition ReadChapter.componentDidUpdate');
       document.getElementById('chapter-content').scrollIntoView();
       let htmlContent = '';
+
       if (prevProps.chapter && (prevProps.chapter.isPurchased || prevProps.chapter.isFree)) {
         htmlContent = this.props.chapter.htmlContent;
       } else {
@@ -118,6 +126,7 @@ class ReadChapter extends React.Component {
   }
 
   componentWillUnmount() {
+    // console.log('ReadChapter.componentWillUnmount');
     document.getElementById('main-content').removeEventListener('scroll', this.onScroll);
   }
 
@@ -272,7 +281,7 @@ class ReadChapter extends React.Component {
         }}
       >
         <p style={{ padding: '0px 40px', fontSize: '17px', fontWeight: '400' }}>{book.name}</p>
-        <ol start="0" style={{ padding: '0 25', fontSize: '14px', fontWeight: '300' }}>
+        <ol start="0" style={{ padding: '0 25', fontSize: '14px' }}>
           {chapters.map((ch, i) => (
             <li
               key={ch._id}
@@ -333,6 +342,7 @@ class ReadChapter extends React.Component {
           style={{
             textAlign: 'left',
             padding: '0px 10px 20px 30px',
+
             position: 'fixed',
             right: 0,
             bottom: 0,
@@ -341,6 +351,7 @@ class ReadChapter extends React.Component {
             left,
             overflowY: 'auto',
             overflowX: 'hidden',
+            fontFamily: 'Roboto, sans-serif',
           }}
           id="main-content"
         >
@@ -355,15 +366,11 @@ class ReadChapter extends React.Component {
             left: '15px',
           }}
         >
-          <i //eslint-disable-line
-            className="material-icons"
+          <FormatListBulletedIcon
             style={styleIcon}
             onClick={this.toggleChapterList}
             onKeyPress={this.toggleChapterList}
-            role="button"
-          >
-            format_list_bulleted
-          </i>
+          />
         </div>
       </div>
     );

@@ -53,6 +53,7 @@ class MyDocument extends Document {
   };
 
   render() {
+    // console.log('MyDocument.render');
     return (
       <Html lang="en" style={{ height: '100%' }}>
         <Head>
@@ -65,15 +66,7 @@ class MyDocument extends Document {
             href="https://storage.googleapis.com/builderbook/favicon32.png"
           />
 
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css?family=Roboto:300,400:latin"
-          />
-          <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
-          <link
-            rel="stylesheet"
-            href="https://storage.googleapis.com/builderbook/nprogress.min.css"
-          />
+          <link rel="stylesheet" href="/fonts/server.css" />
           <link rel="stylesheet" href="https://storage.googleapis.com/builderbook/vs.min.css" />
 
           <style>
@@ -104,6 +97,23 @@ class MyDocument extends Document {
               }
             `}
           </style>
+          <script
+            async
+            src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}`}
+          />
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID}', {
+                page_path: window.location.pathname,
+              });
+            `,
+            }}
+          />
+          {/* Inject styles first to match with the prepend: true configuration. */}
           {this.props.styles}
         </Head>
         <body>

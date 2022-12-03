@@ -2,6 +2,7 @@ const express = require('express');
 const Book = require('../models/Book');
 const User = require('../models/User');
 const { getRepos } = require('../github');
+const logger = require('../logger');
 
 const router = express.Router();
 
@@ -28,7 +29,7 @@ router.post('/books/add', async (req, res) => {
     const book = await Book.add({ userId: req.user.id, ...req.body });
     res.json(book);
   } catch (err) {
-    console.error(err);
+    logger.debug(err);
     res.json({ error: err.message || err.toString() });
   }
 });
@@ -65,7 +66,7 @@ router.get('/github/repos', async (req, res) => {
     const response = await getRepos({ user, request: req });
     res.json({ repos: response.data });
   } catch (err) {
-    console.error(err);
+    logger.debug(err);
     res.json({ error: err.message || err.toString() });
   }
 });
@@ -84,7 +85,7 @@ router.post('/books/sync-content', async (req, res) => {
     await Book.syncContent({ id: bookId, user, request: req });
     res.json({ done: 1 });
   } catch (err) {
-    console.error(err);
+    logger.debug(err);
     res.json({ error: err.message || err.toString() });
   }
 });
